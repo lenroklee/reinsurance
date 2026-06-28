@@ -21,43 +21,31 @@ graph TD;
     D --> F[XGBoost Frequency & Severity];
     F --> G[Excess of Loss Classifier];
     G --> H[Underwriting Audit & Leakage Detection];
-Core Components
-Phase 1: Data Engineering & Financial Metrics
-Data Ingestion & Transformation: Handles large-scale P&C datasets (freMTPL2 exposure and severity) utilizing DuckDB for out-of-memory processing.
 
-Claims Reserving Simulation: Applies stochastic simulations to generate Reporting Delays and Payment Delays, structuring claims into Paid, Case Reserves, and IBNR (Incurred But Not Reported) buckets.
+## Core Components
 
-Financial Reporting Mart: Computes standard P&C Key Performance Indicators, including Loss Ratio, Expense Ratio, and Combined Ratio, while simulating a Quota Share Reinsurance Treaty structure.
+### Phase 1: Data Engineering & Financial Metrics
+- **Data Ingestion & Transformation:** Handles large-scale P&C datasets (freMTPL2 exposure and severity) utilizing DuckDB for out-of-memory processing.
+- **Claims Reserving Simulation:** Applies stochastic simulations to generate Reporting Delays and Payment Delays, structuring claims into Paid, Case Reserves, and IBNR (Incurred But Not Reported) buckets.
+- **Financial Reporting Mart:** Computes standard P&C Key Performance Indicators, including Loss Ratio, Expense Ratio, and Combined Ratio, while simulating a Quota Share Reinsurance Treaty structure.
 
-Phase 2: Actuarial AI & Tail Risk Analytics
-Actuarial Baseline (GLM): Establishes a multiplicative tariff benchmark using Poisson (Frequency) and Gamma (Severity) regressions, incorporating Exposure as a mathematical offset.
+### Phase 2: Actuarial AI & Tail Risk Analytics
+- **Actuarial Baseline (GLM):** Establishes a multiplicative tariff benchmark using Poisson (Frequency) and Gamma (Severity) regressions, incorporating Exposure as a mathematical offset.
+- **Pure Premium ML Engine:** Implements XGBoost models to capture non-linear risk interactions, calculating the Expected Pure Premium for each policy.
+- **Reinsurance Tail-Risk (XoL):** Trains an imbalanced classification model to predict the probability of a policy triggering an Excess of Loss (XoL) treaty threshold (95th percentile of claim costs).
+- **Underwriting Audit & Leakage:** Uses Permutation Importance for robust risk-driver explainability and executes SQL profiling to isolate "Toxic Clusters" (segments where the Technical Loss Ratio heavily exceeds commercial premiums).
 
-Pure Premium ML Engine: Implements XGBoost models to capture non-linear risk interactions, calculating the Expected Pure Premium for each policy.
+## Technology Stack
+- **Database / ETL:** DuckDB, SQL
+- **Data Manipulation:** Python, Pandas, NumPy
+- **Actuarial & ML Modeling:** Statsmodels (GLM), XGBoost, Scikit-Learn
+- **Visualization:** Matplotlib
 
-Reinsurance Tail-Risk (XoL): Trains an imbalanced classification model to predict the probability of a policy triggering an Excess of Loss (XoL) treaty threshold (95th percentile of claim costs).
+## How to Reproduce
 
-Underwriting Audit & Leakage: Uses Permutation Importance for robust risk-driver explainability and executes SQL profiling to isolate "Toxic Clusters" (segments where the Technical Loss Ratio heavily exceeds commercial premiums).
-
-Technology Stack
-Database / ETL: DuckDB, SQL
-
-Data Manipulation: Python, Pandas, NumPy
-
-Actuarial & ML Modeling: Statsmodels (GLM), XGBoost, Scikit-Learn
-
-Visualization: Matplotlib
-
-How to Reproduce
 To run the pipeline locally and generate the analytical database and audit reports:
 
-Clone the repository and navigate to the project directory.
-
-Install the required dependencies:
-
-Bash
-pip install -r requirements.txt
-Execute the main orchestrator script:
-
-Bash
-python main.py
-This will automatically process the raw data, build the DuckDB relational schema, train the baseline and ML models, and output the underwriting audit metrics.
+1. Clone the repository and navigate to the project directory.
+2. Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
