@@ -1,4 +1,4 @@
-# Automated Actuarial Pricing & Reinsurance Analytics Pipeline
+# Reinsurance Analytics
 
 ## Overview
 This repository contains an end-to-end data engineering and predictive analytics pipeline designed for Property & Casualty (P&C) Reinsurance Finance. The project demonstrates how to transition from traditional actuarial pricing to an advanced machine learning architecture, focusing on portfolio profitability, tail-risk identification, and underwriting leakage.
@@ -21,15 +21,16 @@ graph TD;
     D --> F[XGBoost Frequency & Severity];
     F --> G[Excess of Loss Classifier];
     G --> H[Underwriting Audit & Leakage Detection];
+```
 
 ## Core Components
 
-### Phase 1: Data Engineering & Financial Metrics
+### Phase 1: Data Engineering
 - **Data Ingestion & Transformation:** Handles large-scale P&C datasets (freMTPL2 exposure and severity) utilizing DuckDB for out-of-memory processing.
 - **Claims Reserving Simulation:** Applies stochastic simulations to generate Reporting Delays and Payment Delays, structuring claims into Paid, Case Reserves, and IBNR (Incurred But Not Reported) buckets.
 - **Financial Reporting Mart:** Computes standard P&C Key Performance Indicators, including Loss Ratio, Expense Ratio, and Combined Ratio, while simulating a Quota Share Reinsurance Treaty structure.
 
-### Phase 2: Actuarial AI & Tail Risk Analytics
+### Phase 2: Risk Analytics
 - **Actuarial Baseline (GLM):** Establishes a multiplicative tariff benchmark using Poisson (Frequency) and Gamma (Severity) regressions, incorporating Exposure as a mathematical offset.
 - **Pure Premium ML Engine:** Implements XGBoost models to capture non-linear risk interactions, calculating the Expected Pure Premium for each policy.
 - **Reinsurance Tail-Risk (XoL):** Trains an imbalanced classification model to predict the probability of a policy triggering an Excess of Loss (XoL) treaty threshold (95th percentile of claim costs).
@@ -49,3 +50,10 @@ To run the pipeline locally and generate the analytical database and audit repor
 2. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
+   ```
+3. Execute the main orchestrator script:
+   ```bash
+   python main.py
+   ```
+This will automatically process the raw data, build the DuckDB relational schema, train the baseline and ML models, and output the underwriting audit metrics.
+
