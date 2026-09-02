@@ -15,7 +15,7 @@ DB_PATH = os.path.join(PROJECT_ROOT, "data", "processed", "reinsurance_core.duck
 
 def run_permutation_importance() -> None:
     """Executes Step 5: Permutation Importance for Risk Driver Analysis."""
-    print("[INFO] Step 5: Calculating Permutation Importance (Risk Drivers)...")
+    print("Step 5: Calculating Permutation Importance (Risk Drivers)")
     conn = duckdb.connect(DB_PATH)
     
     # Extract features and target for the evaluation model
@@ -76,7 +76,7 @@ def run_permutation_importance() -> None:
 
 def run_underwriting_audit() -> None:
     """Executes Step 6: DuckDB SQL Profiling for Underwriting Leakage."""
-    print("[INFO] Step 6: Executing SQL Underwriting Audit (Leakage Clusters)...")
+    print("Step 6: Executing SQL Underwriting Audit (Leakage Clusters)")
     conn = duckdb.connect(DB_PATH)
     
     # Aggregate toxic policies by demographic clusters
@@ -99,14 +99,14 @@ def run_underwriting_audit() -> None:
     toxic_clusters = conn.execute(query).df()
     conn.close()
     
-    print("🚨 TOP 10 TOXIC UNDERWRITING CLUSTERS (TLR > 150%) 🚨")
+    print("TOP 10 TOXIC UNDERWRITING CLUSTERS (TLR > 150%) ")
     print("="*85)
     print(toxic_clusters.to_string(index=False))
     print("="*85)
     print("[SUCCESS] Strategic Underwriting Audit completed.")
 
 def main() -> None:
-    print("[INFO] Starting Phase 2 Finalization: Actuarial Audit...\n")
+    print("Starting Phase 2 Finalization: Actuarial Audit\n")
     run_permutation_importance()
     run_underwriting_audit()
 
