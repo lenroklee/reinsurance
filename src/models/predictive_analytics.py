@@ -11,7 +11,7 @@ DB_PATH = os.path.join(PROJECT_ROOT, "data", "processed", "reinsurance_core.duck
 
 def load_and_prepare_data() -> pd.DataFrame:
     """Extracts data from DuckDB and prepares variables for Machine Learning."""
-    print("[INFO] Extracting analytical dataset from DuckDB...")
+    print("Extracting analytical dataset from DuckDB")
     conn = duckdb.connect(DB_PATH)
     
     query = """
@@ -38,7 +38,7 @@ def load_and_prepare_data() -> pd.DataFrame:
 def train_actuarial_xgboost() -> None:
     """Trains the XGBoost pipeline for Frequency, Severity, and Tail Risk."""
     df = load_and_prepare_data()
-    print("[INFO] Dataset loaded. Portfolio size:", len(df))
+    print("Dataset loaded. Portfolio size:", len(df))
     
     # Defining input features
     feature_cols = ['Area', 'VehPower', 'VehAge', 'DrivAge', 'BonusMalus', 'Region']
@@ -163,7 +163,7 @@ def train_actuarial_xgboost() -> None:
     conn.close()
 
 def main() -> None:
-    print("[INFO] Starting Phase 2: Advanced Actuarial Machine Learning...")
+    print("Starting Phase 2: Advanced Actuarial Machine Learning")
     train_actuarial_xgboost()
 
 if __name__ == "__main__":
