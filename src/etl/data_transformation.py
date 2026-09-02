@@ -16,7 +16,7 @@ def setup_environment() -> None:
     """Ensures directories exist and removes old DB files to allow clean re-runs."""
     os.makedirs(PROCESSED_DIR, exist_ok=True)
     if os.path.exists(DB_PATH):
-        print(f"[INFO] Existing database found at {DB_PATH}. Overwriting...")
+        print(f"Existing database found at {DB_PATH}. Overwriting")
         os.remove(DB_PATH)
 
 def build_data_warehouse() -> None:
@@ -25,7 +25,7 @@ def build_data_warehouse() -> None:
     performs a LEFT JOIN, and saves the results into the local DuckDB database.
     Configured to handle malformed rows in production datasets.
     """
-    print("[INFO] Connecting to DuckDB...")
+    print("Connecting to DuckDB")
     conn = duckdb.connect(DB_PATH)
     
     try:
@@ -62,7 +62,7 @@ def build_data_warehouse() -> None:
         LEFT JOIN aggregated_claims c ON f.IDpol = c.IDpol;
         """
         
-        print("[INFO] Executing SQL transformation with error tolerance...")
+        print("Executing SQL transformation with error tolerance")
         conn.execute(query)
         
         # Data validation
@@ -77,13 +77,13 @@ def build_data_warehouse() -> None:
         print(f"[ERROR] Database execution failed: {e}")
     finally:
         conn.close()
-        print(f"[INFO] Connection closed. Database saved at {DB_PATH}")
+        print(f"Connection closed. Database saved at {DB_PATH}")
 
 def main() -> None:
-    print("[INFO] Starting Data Transformation Pipeline...")
+    print("Starting Data Transformation Pipeline")
     setup_environment()
     build_data_warehouse()
-    print("[INFO] Pipeline completed.")
+    print("Pipeline completed")
 
 if __name__ == "__main__":
     main()
