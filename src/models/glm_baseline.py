@@ -12,7 +12,7 @@ DB_PATH = os.path.join(PROJECT_ROOT, "data", "processed", "reinsurance_core.duck
 
 def load_modeling_data() -> pd.DataFrame:
     """Extracts the joined feature space from DuckDB for quantitative modeling."""
-    print("[INFO] Extracting analytical dataset from DuckDB...")
+    print("Extracting analytical dataset from DuckDB")
     conn = duckdb.connect(DB_PATH)
     
     # We join Dimensions (features), Facts (targets), and the base portfolio (raw counts)
@@ -40,7 +40,7 @@ def train_glm_baseline(df: pd.DataFrame) -> None:
     # -------------------------------------------------------------------
     # 1. ACTUARIAL DATA TRANSFORMATIONS
     # -------------------------------------------------------------------
-    print("[INFO] Applying actuarial transformations (Offsets and Targets)...")
+    print("Applying actuarial transformations (Offsets and Targets)")
     
     # Frequency Target & Offset
     df['Log_Exposure'] = np.log(df['Exposure'])
@@ -57,7 +57,7 @@ def train_glm_baseline(df: pd.DataFrame) -> None:
     # -------------------------------------------------------------------
     # 2. TRAIN FREQUENCY GLM (POISSON)
     # -------------------------------------------------------------------
-    print("\n[INFO] Training Frequency GLM (Poisson)...")
+    print("\n[INFO] Training Frequency GLM (Poisson)")
     # We use a formula string, similar to R. 'C()' treats variables as Categorical.
     freq_formula = "ReportedClaimCount ~ VehPower + VehAge + DrivAge + BonusMalus + C(Area)"
     
@@ -92,7 +92,7 @@ def train_glm_baseline(df: pd.DataFrame) -> None:
     print("\n[SUCCESS] Actuarial GLM Baselines successfully trained.")
 
 def main() -> None:
-    print("[INFO] Starting Phase 2: Actuarial Baseline Modeling...")
+    print("[INFO] Starting Phase 2: Actuarial Baseline Modeling")
     df = load_modeling_data()
     train_glm_baseline(df)
 
