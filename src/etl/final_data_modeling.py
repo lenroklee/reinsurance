@@ -12,7 +12,7 @@ def execute_final_modeling() -> None:
     (Dim_Policies, Fact_Financials), simulates underwriting dates (up to mid-2026), 
     and creates advanced SQL Views for Time-Series Analytics (Delta Loss Ratio).
     """
-    print("[INFO] Connecting to DuckDB for final Data Modeling...")
+    print("Connecting to DuckDB")
     conn = duckdb.connect(DB_PATH)
     
     try:
@@ -23,7 +23,7 @@ def execute_final_modeling() -> None:
         
         # 1. Create Dim_Policies (The Demographic Dimension)
         # Here we add Claim Frequency and simulate dates up to June 2026
-        print("[INFO] Creating Dim_Policies table (with 2024-2026 time simulation)...")
+        print("Creating Dim_Policies table (with 2024-2026 time simulation)")
         conn.execute("""
         CREATE TABLE Dim_Policies AS
         SELECT 
@@ -45,7 +45,7 @@ def execute_final_modeling() -> None:
         """)
 
         # 2. Create Fact_Financials (The Financial Fact Table)
-        print("[INFO] Creating Fact_Financials table...")
+        print("Creating Fact_Financials table")
         conn.execute("""
         CREATE TABLE Fact_Financials AS
         SELECT * FROM financial_reporting_mart;
@@ -53,7 +53,7 @@ def execute_final_modeling() -> None:
 
         # 3. Create Analytical SQL View (Temporal and delta feature engineering)
         # We use Window Functions (LAG) to calculate the difference with the previous month
-        print("[INFO] Creating SQL View: vw_monthly_regional_summary (with Delta Loss Ratio)...")
+        print("Creating SQL View: vw_monthly_regional_summary (with Delta Loss Ratio)")
         conn.execute("""
         CREATE VIEW vw_monthly_regional_summary AS
         WITH monthly_agg AS (
@@ -99,7 +99,7 @@ def execute_final_modeling() -> None:
         print(f"[ERROR] Data modeling failed: {e}")
     finally:
         # 4. Export to Parquet for Power BI Ingestion
-        print("[INFO] Exporting Star Schema to Parquet files...")
+        print("Exporting Star Schema to Parquet files")
         
         # Define the export directory
         parquet_dir = os.path.join(PROJECT_ROOT, "data", "processed", "powerbi_export")
@@ -112,10 +112,10 @@ def execute_final_modeling() -> None:
         
         print(f"[SUCCESS] Parquet files exported to: {parquet_dir}")
         conn.close()
-        print("[INFO] Database connection closed.")
+        print("Database connection closed")
 
 def main() -> None:
-    print("[INFO] Starting Step 3 & 4: Final Data Modeling...")
+    print("Starting Step 3 & 4: Final Data Modeling")
     execute_final_modeling()
 
 if __name__ == "__main__":
