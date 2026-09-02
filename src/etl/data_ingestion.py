@@ -11,7 +11,7 @@ def setup_directories() -> None:
     Ensure the raw data directory exists before attempting to write files.
     """
     os.makedirs(RAW_DATA_DIR, exist_ok=True)
-    print(f"[INFO] Verified directory: {RAW_DATA_DIR}")
+    print(f"Verified directory: {RAW_DATA_DIR}")
 
 def download_file(url: str, filename: str) -> None:
     """
@@ -22,7 +22,7 @@ def download_file(url: str, filename: str) -> None:
         filename (str): The target filename to save in the raw data directory.
     """
     target_path = os.path.join(RAW_DATA_DIR, filename)
-    print(f"[INFO] Starting download from {url}...")
+    print(f"Starting download from {url}")
     
     try:
         response = requests.get(url, stream=True)
@@ -33,7 +33,7 @@ def download_file(url: str, filename: str) -> None:
                 if chunk:
                     file.write(chunk)
                     
-        print(f"[INFO] Successfully downloaded: {target_path}")
+        print(f"Successfully downloaded: {target_path}")
         
     except requests.exceptions.RequestException as e:
         print(f"[ERROR] Failed to download {filename}. Reason: {e}")
@@ -42,13 +42,13 @@ def main() -> None:
     """
     Main execution flow for the data ingestion process.
     """
-    print("[INFO] Starting Data Ingestion Pipeline...")
+    print("Starting Data Ingestion Pipeline")
     setup_directories()
     
     download_file(URL_FREQ, "freMTPL2freq.csv")
     download_file(URL_SEV, "freMTPL2sev.csv")
     
-    print("[INFO] Data ingestion completed successfully.")
+    print("Data ingestion completed successfully")
 
 if __name__ == "__main__":
     main()
