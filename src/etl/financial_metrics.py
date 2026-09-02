@@ -11,7 +11,7 @@ def calculate_financial_layers() -> None:
     Enriches the database with professional P&C financial metrics, combining
     earned premiums, underwriting expenses, ultimate losses, and reinsurance structures.
     """
-    print("[INFO] Connecting to DuckDB for financial metrics calculation...")
+    print("Connecting to DuckDB for financial metrics calculation")
     conn = duckdb.connect(DB_PATH)
     
     try:
@@ -59,7 +59,7 @@ def calculate_financial_layers() -> None:
         FROM premium_baseline;
         """
         
-        print("[INFO] Executing financial metrics database build...")
+        print("Executing financial metrics database build")
         conn.execute(query)
         
         # Aggregate validation for high-level visibility
@@ -80,10 +80,10 @@ def calculate_financial_layers() -> None:
         print(f"[ERROR] Financial metrics pipeline failed: {e}")
     finally:
         conn.close()
-        print("[INFO] Database connection closed.")
+        print("Database connection closed")
 
 def main() -> None:
-    print("[INFO] Starting Financial Data Mart Generation...")
+    print("[INFO] Starting Financial Data Mart Generation")
     calculate_financial_layers()
 
 if __name__ == "__main__":
