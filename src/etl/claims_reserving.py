@@ -13,11 +13,11 @@ def generate_reserving_layer() -> None:
     Simulates the actuarial claims development process (Reporting Delays and Payment Delays)
     to calculate IBNR (Incurred But Not Reported) and Case Reserves.
     """
-    print("[INFO] Connecting to DuckDB to generate Claims Reserving Layer...")
+    #Connecting to DuckDB to generate Claims Reserving Layer
     conn = duckdb.connect(DB_PATH)
     
     try:
-        print("[INFO] Extracting claim events for simulation...")
+        #Extracting claim events for simulation
         claims_df = conn.execute("""
             SELECT IDpol, TotalClaimAmount 
             FROM policy_portfolio 
@@ -48,7 +48,7 @@ def generate_reserving_layer() -> None:
         claims_df['IBNRReserve'] = np.where(claims_df['Status'] == 'IBNR', claims_df['TotalClaimAmount'], 0.0)
         claims_df['UltimateLoss'] = claims_df['TotalClaimAmount']
         
-        print("[INFO] Writing fact_claims table into DuckDB...")
+        #Writing fact_claims table into DuckDB
         conn.execute("DROP TABLE IF EXISTS fact_claims;")
         conn.execute("CREATE TABLE fact_claims AS SELECT * FROM claims_df")
         
@@ -56,7 +56,7 @@ def generate_reserving_layer() -> None:
         case_total = conn.execute("SELECT SUM(CaseReserve) FROM fact_claims").fetchone()[0]
         paid_total = conn.execute("SELECT SUM(PaidAmount) FROM fact_claims").fetchone()[0]
         
-        print("[SUCCESS] Claims Reserving Layer created (fact_claims).")
+        print("Claims Reserving Layer created (fact_claims).")
         print(f"          - Total Paid Claims: EUR {paid_total:,.2f}")
         print(f"          - Total Case Reserves (Open): EUR {case_total:,.2f}")
         print(f"          - Total IBNR Reserves (Blind): EUR {ibnr_total:,.2f}")
@@ -65,10 +65,10 @@ def generate_reserving_layer() -> None:
         print(f"[ERROR] Claims Reserving generator failed: {e}")
     finally:
         conn.close()
-        print("[INFO] Database connection closed.")
+        print("Database connection closed")
 
 def main() -> None:
-    print("[INFO] Starting Flusso 2: Claims Reserving & IBNR Generator...")
+    print("Starting Flusso 2: Claims Reserving & IBNR Generator")
     generate_reserving_layer()
 
 if __name__ == "__main__":
